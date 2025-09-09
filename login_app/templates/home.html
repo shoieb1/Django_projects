@@ -1,0 +1,94 @@
+<html lang="en">
+ <head>
+  <meta charset="utf-8"/>
+  <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+  <title>
+   My Blog
+  </title>
+  <script src="https://cdn.tailwindcss.com">
+  </script>
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css" rel="stylesheet"/>
+  <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&amp;display=swap" rel="stylesheet"/>
+  <style>
+   body {
+            font-family: 'Roboto', sans-serif;
+        }
+  </style>
+ </head>
+ <body class="bg-gray-100 text-gray-900">
+  <nav class="bg-white shadow-md">
+   <div class="container mx-auto px-4 py-2 flex justify-between items-center">
+    <a class="text-2xl font-bold text-gray-800" href="index.html">
+     My Blog
+    </a>
+    <div>
+     <a class="text-gray-800 hover:text-gray-600 mx-2" href="index.html">
+      Home
+     </a>
+     <a class="text-gray-800 hover:text-gray-600 mx-2" href="about us.html">
+      About
+     </a>
+     <a class="text-gray-800 hover:text-gray-600 mx-2" href="contactus.html">
+      Contact
+     </a>
+     <a class="text-gray-800 hover:text-gray-600 mx-2" href="{{ url_for('login') }}">
+      Login
+     </a>
+     <a class="text-gray-800 hover:text-gray-600 mx-2" href="{{ url_for('create_account') }}">
+      Register
+     </a>
+    </div>
+   </div>
+  </nav>
+  <main class="container mx-auto px-4 py-8">
+   <h1 class="text-4xl font-bold mb-8">
+    Welcome to My Blog
+   </h1>
+   <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+    <div class="bg-white p-6 rounded-lg shadow-md">
+     <img alt="Placeholder image of a scenic landscape" class="w-full h-48 object-cover rounded-t-lg" height="400" src="https://storage.googleapis.com/a1aa/image/04fomKP3N3VUFqMP0HSuAg1T6bU781UDSxASXd0mNePeAEZnA.jpg" width="600"/>
+     <h2 class="text-2xl font-bold mt-4">
+      Post Title 1
+     </h2>
+     <p class="text-gray-600 mt-2">
+      by Author 1 on January 1, 2023
+     </p>
+     <p class="text-gray-700 mt-4">
+      Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer nec odio. Praesent libero. Sed cursus ante dapibus diam.
+     </p>
+    </div>
+    <div class="bg-white p-6 rounded-lg shadow-md">
+     <img alt="Placeholder image of a city skyline" class="w-full h-48 object-cover rounded-t-lg" height="400" src="https://storage.googleapis.com/a1aa/image/zYpWdzFfOvzva670v1CVF8GpuavQaO7pO0CW1fVJvYdfAEZnA.jpg" width="600"/>
+     <h2 class="text-2xl font-bold mt-4">
+      Post Title 2
+     </h2>
+     <p class="text-gray-600 mt-2">
+      by Author 2 on February 1, 2023
+     </p>
+     <p class="text-gray-700 mt-4">
+      Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer nec odio. Praesent libero. Sed cursus ante dapibus diam.
+     </p>
+    </div>
+    <div class="bg-white p-6 rounded-lg shadow-md">
+     <img alt="Placeholder image of a forest trail" class="w-full h-48 object-cover rounded-t-lg" height="400" src="https://storage.googleapis.com/a1aa/image/AroM2lEU0W5JEBy0P67RhdjlBXewINfumMHFRCu5FqHdAisTA.jpg" width="600"/>
+     <h2 class="text-2xl font-bold mt-4">
+      Post Title 3
+     </h2>
+     <p class="text-gray-600 mt-2">
+      by Author 3 on March 1, 2023
+     </p>
+     <p class="text-gray-700 mt-4">
+      Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer nec odio. Praesent libero. Sed cursus ante dapibus diam.
+     </p>
+    </div>
+   </div>
+  </main>
+  <footer class="bg-white shadow-md mt-8">
+   <div class="container mx-auto px-4 py-4 text-center">
+    <p class="text-gray-600">
+     © 2024 My Blog. All rights reserved.
+    </p>
+   </div>
+  </footer>
+ </body>
+</html>

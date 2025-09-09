@@ -1,0 +1,61 @@
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Contact - My Blog</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css"></link>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Roboto', sans-serif;
+        }
+    </style>
+</head>
+<body class="bg-gray-100 text-gray-900">
+    <nav class="bg-white shadow-md">
+        <div class="container mx-auto px-4 py-2 flex justify-between items-center">
+            <a href="/" class="text-2xl font-bold text-gray-800">My Blog</a>
+            <div>
+                <a href="/" class="text-gray-800 hover:text-gray-600 mx-2">Home</a>
+                <a href="/about us.html" class="text-gray-800 hover:text-gray-600 mx-2">About</a>
+                <a href="/contactus.html" class="text-gray-800 hover:text-gray-600 mx-2">Contact</a>
+                <a href="/login.html" class="text-gray-800 hover:text-gray-600 mx-2">Login</a>
+                <a href="/create account.html" class="text-gray-800 hover:text-gray-600 mx-2">Register</a>
+            </div>
+        </div>
+    </nav>
+    <main class="container mx-auto px-4 py-8">
+        <h1 class="text-4xl font-bold mb-8">Contact Us</h1>
+        <div class="max-w-md mx-auto bg-white p-8 rounded-lg shadow-md">
+            <form action="/contactus.html" method="POST">
+                <div class="mb-4">
+                    <label for="name" class="block text-gray-700">Name</label>
+                    <input type="text" id="name" name="name" class="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500" required>
+                </div>
+                <div class="mb-4">
+                    <label for="email" class="block text-gray-700">Email</label>
+                    <input type="email" id="email" name="email" class="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500" required>
+                </div>
+                <div class="mb-4">
+                    <label for="message" class="block text-gray-700">Message</label>
+                    <textarea id="message" name="message" class="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500" rows="4" required></textarea>
+                </div>
+                <div class="flex items-center justify-between">
+                    <button type="submit" class="bg-blue-500 text-white px-4 py-2 rounded">Send Message</button>
+                </div>
+            </form>
+            <div class="mt-8">
+                <h2 class="text-2xl font-bold mb-2">Contact Information</h2>
+                <p class="text-gray-700">Phone: +91 9381965571</p>
+                <p class="text-gray-700">Email: shoiebsulthan57666@gmail.com</p>
+            </div>
+        </div>
+    </main>
+    <footer class="bg-white shadow-md mt-8">
+        <div class="container mx-auto px-4 py-4 text-center">
+            <p class="text-gray-600">&copy; 2024 My Blog. All rights reserved.</p>
+        </div>
+    </footer>
+</body>
+</html>

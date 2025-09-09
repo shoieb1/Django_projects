@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html lang="en">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css"></link>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Roboto', sans-serif;
+        }
+    </style>
+<head>
+    <link rel="stylesheet" href="/ASSETS/styles.css">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Latest Blog</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <style>
+        nav {
+            position: fixed;
+            top: 0;
+            width: 100%;
+            z-index: 1000;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+        }
+        .card {
+            box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+            border-radius: 8px;
+        }
+        .card-body input, .card-body textarea {
+            margin-bottom: 1rem;
+        }
+    </style>
+</head>
+<body>
+    <nav class="bg-white shadow-md">
+        <div class="container mx-auto px-4 py-2 flex justify-between items-center">
+         <a class="text-2xl font-bold text-gray-800" href="index.html">
+          My Blog
+         </a>
+         <div>
+          <a class="text-gray-800 hover:text-gray-600 mx-2" href="index.html">
+           Home
+          </a>
+          <a class="text-gray-800 hover:text-gray-600 mx-2" href="about us.html">
+           About
+          </a>
+          <a class="text-gray-800 hover:text-gray-600 mx-2" href="contactus.html">
+           Contact
+          </a>
+          <a class="text-gray-800 hover:text-gray-600 mx-2" href="index.html">
+           Logout
+          </a>
+         </div>
+        </div>
+       </nav>
+<section class="blog-area pt-5 pb-5">
+    <div class="container">
+        <div class="row">
+            <div class="col-xl-12 text-center pb-3">
+                <div class="section-title service-title">
+                    <br>
+                    <h2>Latest Blog</h2>
+                    
+                </div>
+            </div>
+        </div>
+        <div class="row" id="blog-posts">
+            <!-- Blog posts will be dynamically added here -->
+        </div>
+        <div class="row">
+            <div class="col-xl-12">
+                <div class="card mt-5">
+                    <div class="card-header bg-primary text-white text-center">
+                        <h3>Add New Blog Post</h3>
+                    </div>
+                    <div class="card-body">
+                        <form id="blog-form">
+                            <input type="hidden" id="post-id" value="">
+                            <div class="form-group">
+                                <label for="title">Blog Title</label>
+                                <input type="text" class="form-control" id="title" placeholder="Enter blog title" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="image-url">Enter Image URL</label>
+                                <input type="url" class="form-control" id="image-url" placeholder="Enter image URL">
+                            </div>
+                            <div class="form-group">
+                                <label for="image-file">Or Upload Image</label>
+                                <input type="file" class="form-control-file" id="image-file" accept="image/*">
+                            </div>
+                            <div class="form-group">
+                                <label for="content">Blog Content</label>
+                                <textarea class="form-control" id="content" rows="4" placeholder="Write blog content here" required></textarea>
+                            </div>
+                            <button type="submit" class="btn btn-primary btn-block">Save Blog Post</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<script>
+    let editingPost = null;
+
+    document.getElementById('blog-form').addEventListener('submit', function(e) {
+        e.preventDefault();
+
+        const title = document.getElementById('title').value;
+        const content = document.getElementById('content').value;
+        const imageUrl = document.getElementById('image-url').value;
+        const imageFile = document.getElementById('image-file').files[0];
+        const blogPostsContainer = document.getElementById('blog-posts');
+
+        const getImageSource = () => {
+            return new Promise((resolve) => {
+                if (imageUrl) {
+                    resolve(imageUrl); // Use the URL if provided
+                } else if (imageFile) {
+                    const reader = new FileReader();
+                    reader.onload = function(event) {
+                        resolve(event.target.result);
+                    };
+                    reader.readAsDataURL(imageFile);
+                } else {
+                    resolve(''); // Default to an empty string if no image provided
+                }
+            });
+        };
+
+        getImageSource().then((imageSrc) => {
+            if (editingPost) {
+                // Update the existing post
+                editingPost.querySelector('.blog-title a').textContent = title;
+                editingPost.querySelector('.blog-content p').textContent = content;
+                editingPost.querySelector('.blog-thumb img').src = imageSrc;
+                editingPost = null;  // Clear editing mode
+            } else {
+                // Create a new blog post
+                const blogPost = document.createElement('div');
+                blogPost.classList.add('col-xl-4', 'col-lg-4', 'col-md-6', 'mb-30');
+                blogPost.innerHTML = `
+                    <div class="blog-wrapper home-blog-wrapper white-bg">
+                        <div class="blog-thumb">
+                            <a href="#">
+                                <img src="${imageSrc}" alt="Blog image" />
+                            </a>
+                        </div>
+                        <div class="meta-info">
+                            <ul>
+                                <li class="posts-time">${new Date().toLocaleDateString()}</li>
+                            </ul>
+                        </div>
+                        <div class="blog-content home-blog">
+                            <h2 class="blog-title">
+                                <a href="#">${title}</a>
+                            </h2>
+                            <p>${content}</p>
+                        </div>
+                        <div class="link-box home-blog-link">
+                            <button class="edit-btn btn btn-warning btn-sm">Edit</button>
+                            <button class="delete-btn btn btn-danger btn-sm">Delete</button>
+                        </div>
+                    </div>
+                `;
+
+                // Add delete functionality
+                blogPost.querySelector('.delete-btn').addEventListener('click', function() {
+                    blogPostsContainer.removeChild(blogPost);
+                });
+
+                // Add edit functionality
+                blogPost.querySelector('.edit-btn').addEventListener('click', function() {
+                    editingPost = blogPost;
+                    document.getElementById('title').value = blogPost.querySelector('.blog-title a').textContent;
+                    document.getElementById('content').value = blogPost.querySelector('.blog-content p').textContent;
+                    document.getElementById('image-url').value = imageSrc.includes('base64') ? '' : imageSrc;
+                    document.getElementById('image-file').value = ''; // Clear file input
+                });
+
+                blogPostsContainer.appendChild(blogPost);
+            }
+
+            document.getElementById('blog-form').reset();
+        });
+    });
+</script>
+
+<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.2/dist/umd/popper.min.js"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+</body>
+</html>

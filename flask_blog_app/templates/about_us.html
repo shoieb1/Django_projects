@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+    <title>About Us</title>
+</head>
+<body>
+    <header>
+        <nav>
+            <a href="{{ url_for('home') }}">Home</a>
+            <a href="{{ url_for('login') }}">Login</a>
+            <a href="{{ url_for('contact_us') }}">Contact Us</a>
+            <a href="{{ url_for('logout') }}">Logout</a>
+        </nav>
+    </header>
+    
+    <h1>About Us</h1>
+    <p>Welcome to our blog! We are passionate about sharing knowledge and insights on various topics.</p>
+    <p>Our team consists of experienced writers and enthusiasts who aim to provide valuable content to our readers.</p>
+    <p>Thank you for visiting our blog. We hope you find our articles informative and engaging!</p>
+    
+    <footer>
+        <p>&copy; 2023 Blog Application. All rights reserved.</p>
+    </footer>
+</body>
+</html>

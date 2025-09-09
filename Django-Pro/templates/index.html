@@ -1,0 +1,251 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Create Account</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/zxcvbn/4.4.2/zxcvbn.js"></script>
+  <style>
+    .strength-meter {
+      height: 8px;
+      border-radius: 4px;
+      transition: width 0.3s ease, background-color 0.3s ease;
+    }
+    .weak { background-color: #ef4444; }
+    .moderate { background-color: #f59e0b; }
+    .strong { background-color: #10b981; }
+    .password-container { position: relative; }
+    .view-icon { 
+      position: absolute; 
+      right: 10px; 
+      top: 70%; 
+      transform: translateY(-50%); 
+      cursor: pointer; 
+      display: flex;
+      align-items: center;
+    }
+    .password-input { padding-right: 40px; }
+  </style>
+</head>
+<body class="bg-gray-100 flex items-center justify-center min-h-screen">
+  <div class="bg-white p-8 rounded-lg shadow-lg w-full max-w-md">
+    <h1 class="text-2xl font-bold text-gray-800 mb-6 text-center">Create Account</h1>
+    
+    <div class="mb-4">
+      <label for="email" class="block text-gray-600 font-medium mb-2">Email</label>
+      <input 
+        type="email" 
+        id="email" 
+        class="w-full p-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500" 
+        placeholder="Enter your email"
+      >
+    </div>
+
+    <div class="mb-4 password-container">
+      <label for="password" class="block text-gray-600 font-medium mb-2">Password</label>
+      <input 
+        type="password" 
+        id="password" 
+        class="w-full p-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 password-input" 
+        placeholder="Enter your password"
+      >
+      <svg id="view-password" class="view-icon w-5 h-5 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path>
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"></path>
+      </svg>
+    </div>
+
+    <div class="mb-4 password-container">
+      <label for="re-password" class="block text-gray-600 font-medium mb-2">Re-enter Password</label>
+      <input 
+        type="password" 
+        id="re-password" 
+        class="w-full p-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 password-input" 
+        placeholder="Re-enter your password"
+        onpaste="return false"
+      >
+      <svg id="view-re-password" class="view-icon w-5 h-5 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path>
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"></path>
+      </svg>
+    </div>
+
+    <div class="mb-4">
+      <div class="text-gray-600 font-medium mb-1">Password Strength</div>
+      <div class="strength-meter w-0"></div>
+      <p id="strength-text" class="text-sm text-gray-500 mt-2">Enter a password to see its strength.</p>
+    </div>
+
+    <div id="feedback" class="text-sm text-gray-600 mb-4"></div>
+    <p id="status" class="text-sm text-green-600 mt-2 hidden"></p>
+
+    <button 
+      id="create-account" 
+      class="w-full bg-blue-500 text-white p-3 rounded-lg hover:bg-blue-600 transition disabled:bg-gray-400" 
+      disabled
+    >
+      Create Account
+    </button>
+
+    <p class="text-center text-gray-600 mt-4">
+      Already have an account? <a href="/login.html" class="text-blue-500 hover:underline">Log in</a>
+    </p>
+  </div>
+
+  <script>
+    const emailInput = document.getElementById('email');
+    const passwordInput = document.getElementById('password');
+    const rePasswordInput = document.getElementById('re-password');
+    const strengthMeter = document.querySelector('.strength-meter');
+    const strengthText = document.getElementById('strength-text');
+    const feedback = document.getElementById('feedback');
+    const status = document.getElementById('status');
+    const createButton = document.getElementById('create-account');
+    const viewPassword = document.getElementById('view-password');
+    const viewRePassword = document.getElementById('view-re-password');
+
+    viewPassword.addEventListener('click', () => {
+      const type = passwordInput.type === 'password' ? 'text' : 'password';
+      passwordInput.type = type;
+      viewPassword.innerHTML = type === 'password' ? 
+        '<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"></path>' :
+        '<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13.875 18.825A10.05 10.05 0 0112 19c-4.478 0-8.268-2.943-9.542-7a9.97 9.97 0 011.563-3.029m5.858.908a3 3 0 114.243 4.243M9.878 9.878l4.242 4.242M9.88 9.88l-3.29-3.29m7.532 7.532l3.29 3.29M3 3l3.59 3.59m0 0A9.953 9.953 0 0112 5c4.478 0 8.268 2.943 9.542 7a10.025 10.025 0 01-4.132 5.411m0 0L21 21"></path>';
+    });
+
+    viewRePassword.addEventListener('click', () => {
+      const type = rePasswordInput.type === 'password' ? 'text' : 'password';
+      rePasswordInput.type = type;
+      viewRePassword.innerHTML = type === 'password' ? 
+        '<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"></path>' :
+        '<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13.875 18.825A10.05 10.05 0 0112 19c-4.478 0-8.268-2.943-9.542-7a9.97 9.97 0 011.563-3.029m5.858.908a3 3 0 114.243 4.243M9.878 9.878l4.242 4.242M9.88 9.88l-3.29-3.29m7.532 7.532l3.29 3.29M3 3l3.59 3.59m0 0A9.953 9.953 0 0112 5c4.478 0 8.268 2.943 9.542 7a10.025 10.025 0 01-4.132 5.411m0 0L21 21"></path>';
+    });
+
+    function updateStrengthAndValidate() {
+      const password = passwordInput.value;
+      const rePassword = rePasswordInput.value;
+      const result = zxcvbn(password);
+
+      const score = result.score;
+      let strengthClass, strengthLabel, meterWidth;
+
+      if (password.length === 0) {
+        strengthClass = '';
+        strengthLabel = 'Enter a password to see its strength.';
+        meterWidth = '0%';
+        createButton.disabled = true;
+      } else if (score <= 1) {
+        strengthClass = 'weak';
+        strengthLabel = 'Weak';
+        meterWidth = '33%';
+        createButton.disabled = true;
+      } else if (score <= 3) {
+        strengthClass = 'moderate';
+        strengthLabel = 'Moderate';
+        meterWidth = '66%';
+        createButton.disabled = password !== rePassword;
+      } else {
+        strengthClass = 'strong';
+        strengthLabel = 'Strong';
+        meterWidth = '100%';
+        createButton.disabled = password !== rePassword;
+      }
+
+      strengthMeter.className = `strength-meter ${strengthClass}`;
+      strengthMeter.style.width = meterWidth;
+      strengthText.textContent = strengthLabel;
+
+      let feedbackText = '';
+      if (password.length > 0) {
+        feedbackText += `Estimated crack time: ${result.crack_times_display.offline_slow_hashing_1e4_per_second}<br>`;
+        if (result.feedback.suggestions.length > 0) {
+          feedbackText += 'Suggestions: ' + result.feedback.suggestions.join(' ') + '<br>';
+        }
+        if (result.feedback.warning) {
+          feedbackText += 'Warning: ' + result.feedback.warning;
+        }
+        if (password && rePassword && password !== rePassword) {
+          feedbackText += '<br><span class="text-red-600">Passwords do not match.</span>';
+          createButton.disabled = true;
+        }
+      }
+      feedback.innerHTML = feedbackText;
+      return result;
+    }
+
+    passwordInput.addEventListener('input', updateStrengthAndValidate);
+    rePasswordInput.addEventListener('input', updateStrengthAndValidate);
+
+    createButton.addEventListener('click', async () => {
+      const email = emailInput.value.trim();
+      const password = passwordInput.value;
+      const rePassword = rePasswordInput.value;
+      const result = updateStrengthAndValidate();
+
+      if (!email || !password || !rePassword) {
+        status.textContent = 'Please fill in all fields.';
+        status.classList.remove('hidden', 'text-green-600');
+        status.classList.add('text-red-600');
+        return;
+      }
+
+      if (password !== rePassword) {
+        status.textContent = 'Passwords do not match.';
+        status.classList.remove('hidden', 'text-green-600');
+        status.classList.add('text-red-600');
+        return;
+      }
+
+      try {
+        console.log('Sending strength data:', {
+          score: result.score,
+          crack_time: result.crack_times_display.offline_slow_hashing_1e4_per_second,
+          suggestions: result.feedback.suggestions.join(' '),
+          warning: result.feedback.warning || ''
+        });
+        const strengthResponse = await fetch('http://localhost:8000/save-strength/', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            score: result.score,
+            crack_time: result.crack_times_display.offline_slow_hashing_1e4_per_second,
+            suggestions: result.feedback.suggestions.join(' '),
+            warning: result.feedback.warning || ''
+          })
+        });
+        console.log('Strength response:', strengthResponse);
+        const strengthData = await strengthResponse.json();
+        console.log('Strength data:', strengthData);
+
+        console.log('Sending registration data:', { email, password });
+        const createResponse = await fetch('http://localhost:8000/register/', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ email, password })
+        });
+        console.log('Create response:', createResponse);
+        const createData = await createResponse.json();
+        console.log('Create data:', createData);
+
+        if (createResponse.ok && strengthResponse.ok) {
+          status.textContent = 'Account created successfully!';
+          status.classList.remove('hidden', 'text-red-600');
+          status.classList.add('text-green-600');
+          setTimeout(() => window.location.href = '/login.html', 2000);
+        } else {
+          status.textContent = createData.message || 'Error creating account.';
+          status.classList.remove('hidden', 'text-green-600');
+          status.classList.add('text-red-600');
+        }
+      } catch (error) {
+        console.error('Fetch error:', error);
+        status.textContent = error.message.includes('Failed to fetch') 
+          ? 'Error: Unable to connect to server. Please check if the server is running.'
+          : `Error: ${error.message}`;
+        status.classList.remove('hidden', 'text-green-600');
+        status.classList.add('text-red-600');
+      }
+    });
+  </script>
+</body>
+</html>

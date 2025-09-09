@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Main Page</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-100 flex items-center justify-center min-h-screen">
+  <div class="bg-white p-8 rounded-lg shadow-lg w-full max-w-md">
+    <h1 class="text-2xl font-bold text-gray-800 mb-6 text-center">Welcome!</h1>
+    <p class="text-gray-600 mb-4">You have successfully logged in.</p>
+    <button 
+      id="logout" 
+      class="w-full bg-red-500 text-white p-3 rounded-lg hover:bg-red-600 transition"
+    >
+      Log Out
+    </button>
+  </div>
+
+  <script>
+    document.getElementById('logout').addEventListener('click', async () => {
+      try {
+        const response = await fetch('http://localhost:8000/logout/', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' }
+        });
+        if (response.ok) {
+          window.location.href = '/login.html';
+        }
+      } catch (error) {
+        console.error('Logout error:', error);
+      }
+    });
+  </script>
+</body>
+</html>
